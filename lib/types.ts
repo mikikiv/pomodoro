@@ -1,3 +1,24 @@
+export type GiphyResponse = {
+  data: {
+    id: string;
+    type: string;
+    title: string;
+    images: {
+      fixed_height: {
+        url: string;
+      };
+      fixed_width: {
+        url: string;
+      };
+    };
+  };
+  meta: {
+    status: number;
+    msg: string;
+    response_id: string;
+  };
+};
+
 export type Preferences = {
   focusIntervalDuration: string;
   shortBreakIntervalDuration: string;

@@ -8,7 +8,8 @@
   "contributors": [
     "pernielsentikaer",
     "brodelp",
-    "susan_thapa"
+    "susan_thapa",
+    "mikikiv"
   ],
   "keywords": [
     "pomodoro",
@@ -242,9 +243,16 @@
       "name": "completionImage",
       "type": "textfield",
       "required": false,
-      "title": "Image Markdown Link",
+      "title": "Default Image Link",
       "description": "Image on interval completion, URL",
-      "default": "![The Best Thank You GIF by SWR3](https://media0.giphy.com/media/ZBn3ZRvCbWz2PS3Rbg/200.gif)"
+      "default": "https://media0.giphy.com/media/ZBn3ZRvCbWz2PS3Rbg/200.gif"
+    },
+    {
+      "name": "giphyAPIKey",
+      "type": "textfield",
+      "required": false,
+      "title": "Giphy API Key",
+      "description": "Use an API key from Giphy to get random images on interval completion. Get your API key here: https://developers.giphy.com/docs/api#quick-start-guide"
     },
     {
       "name": "sound",
@@ -283,7 +291,8 @@
     }
   ],
   "dependencies": {
-    "@raycast/api": "^1.53.3"
+    "@raycast/api": "^1.53.3",
+    "@raycast/utils": "^1.10.1"
   },
   "devDependencies": {
     "@raycast/eslint-config": "^1.0.5",

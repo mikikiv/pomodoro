@@ -1,5 +1,6 @@
 import { Detail, launchCommand, LaunchType, closeMainWindow, popToRoot, List, Icon } from "@raycast/api";
 import { ActionPanel, Action } from "@raycast/api";
+import { useFetch } from "@raycast/utils";
 import { exec } from "child_process";
 import {
   continueInterval,
@@ -10,6 +11,7 @@ import {
   preferences,
   resetInterval,
 } from "../lib/intervals";
+import { GiphyResponse } from "../lib/types";
 
 const createAction = (action: () => void) => () => {
   action();
@@ -104,14 +106,37 @@ const ActionsList = () => {
 };
 
 const EndOfInterval = () => {
+  let image;
+
+  const makeMarkdownImage = (description: string, url: string) => {
+    return `![${description}](${url})`;
+  };
+
   if (preferences.sound) {
     exec(`afplay /System/Library/Sounds/${preferences.sound}.aiff -v 10 && $$`);
+  }
+
+  if (preferences.giphyAPIKey) {
+    const { isLoading, data } = useFetch(
+      `https://api.giphy.com/v1/gifs/random?api_key=${preferences.giphyAPIKey}&tag=you+did+it&rating=pg`,
+      {
+        keepPreviousData: true,
+      }
+    );
+    if (!isLoading && data) {
+      const giphyResponse = data as GiphyResponse;
+      image = makeMarkdownImage(giphyResponse.data.title, giphyResponse.data.images.fixed_height.url);
+    } else if (isLoading) {
+      ("You did it!");
+    } else {
+      image = makeMarkdownImage("You did it!", preferences.completionImage);
+    }
   }
 
   return (
     <Detail
       navigationTitle={`Interval completed`}
-      markdown={`${preferences.completionImage}`}
+      markdown={image}
       actions={
         <ActionPanel title="Start Next Interval">
           <Action
