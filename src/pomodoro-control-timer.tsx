@@ -106,11 +106,8 @@ const ActionsList = () => {
 };
 
 const EndOfInterval = () => {
-  let image;
-
-  const makeMarkdownImage = (description: string, url: string) => {
-    return `![${description}](${url})`;
-  };
+  let markdownImage;
+  let usingGiphy = false;
 
   if (preferences.sound) {
     exec(`afplay /System/Library/Sounds/${preferences.sound}.aiff -v 10 && $$`);
@@ -118,25 +115,26 @@ const EndOfInterval = () => {
 
   if (preferences.giphyAPIKey) {
     const { isLoading, data } = useFetch(
-      `https://api.giphy.com/v1/gifs/random?api_key=${preferences.giphyAPIKey}&tag=you+did+it&rating=pg`,
+      `https://api.giphy.com/v1/gifs/random?api_key=${preferences.giphyAPIKey}&tag=success&rating=pg-13`,
       {
         keepPreviousData: true,
       }
     );
     if (!isLoading && data) {
       const giphyResponse = data as GiphyResponse;
-      image = makeMarkdownImage(giphyResponse.data.title, giphyResponse.data.images.fixed_height.url);
+      markdownImage = `![${giphyResponse.data.title}](${giphyResponse.data.images.fixed_height.url})`;
+      usingGiphy = true;
     } else if (isLoading) {
       ("You did it!");
     } else {
-      image = makeMarkdownImage("You did it!", preferences.completionImage);
+      markdownImage = `![${"You did it!"}](${preferences.completionImage})`;
     }
   }
 
   return (
     <Detail
       navigationTitle={`Interval completed`}
-      markdown={image}
+      markdown={`${usingGiphy ? `![powered by GIPHY](Poweredby_100px-White_VertLogo.png) \n \n` : ""}` + markdownImage}
       actions={
         <ActionPanel title="Start Next Interval">
           <Action
